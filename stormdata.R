@@ -12,7 +12,7 @@ subsetData <- subset(data, select = c("BGN_DATE","EVTYPE","PROPDMG",
 # Clean up date
 BGN_DATE <- subsetData$BGN_DATE
 BGN_DATE <- substr(BGN_DATE, 1, 9)
-data$BGN_DATE <- as.Date(BGN_DATE, format = "%m/%d/%Y")
+rm(data)
 
 # No. of unique events each year. Group by year and find unique events in
 # each year.
