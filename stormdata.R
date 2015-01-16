@@ -8,11 +8,12 @@ data <- read.csv(bzfile("stormdata.csv.bz2")) # cache = TRUE
 subsetData <- subset(data, select = c("BGN_DATE","EVTYPE","PROPDMG",
                                             "PROPDMGEXP","CROPDMG","CROPDMGEXP",
                                             "FATALITIES","INJURIES"))
+rm(data)
 
 # Clean up date
 BGN_DATE <- subsetData$BGN_DATE
 BGN_DATE <- substr(BGN_DATE, 1, 9)
-rm(data)
+subsetData$BGN_DATE <- as.Date(BGN_DATE, format = "%m/%d/%Y")
 
 # No. of unique events each year. Group by year and find unique events in
 # each year.
