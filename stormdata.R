@@ -26,5 +26,17 @@ subsetData$BGN_DATE <- as.Date(BGN_DATE, format = "%m/%d/%Y")
 
 # group by type and take sum of deaths and injuries in one column
 
+exponent <- function (x){
+        x <- as.character(x)
+        ifelse(x == "B", as.numeric(1000000000), 
+               ifelse(x == "M", as.numeric(1000000), 
+                      ifelse(x == "K", as.numeric(1000), 0)))
+}
 
+subsetData$PROPDMGEXP <- toupper(subsetData$PROPDMGEXP)
+subsetData$PROPDMGEXP <- exponent(subsetData$PROPDMGEXP)
+subsetData$PROPDMGEXPTOT <- as.numeric(subsetData$PROPDMG*data*subsetData$PROPDMGEXP)
 
+subsetData$CROPDMGEXP <- toupper(subsetData$CROPDMGEXP)
+subsetData$CROPDMGEXP <- exponent(subsetData$CROPDMGEXP)
+subsetData$CROPDMGEXPTOT <- as.numeric(subsetData$CROPDMG*data*subsetData$CROPDMGEXP)
