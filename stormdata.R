@@ -40,3 +40,11 @@ subsetData$PROPDMGEXPTOT <- as.numeric(subsetData$PROPDMG*subsetData$PROPDMGEXP)
 subsetData$CROPDMGEXP <- toupper(subsetData$CROPDMGEXP)
 subsetData$CROPDMGEXP <- exponent(subsetData$CROPDMGEXP)
 subsetData$CROPDMGEXPTOT <- as.numeric(subsetData$CROPDMG*subsetData$CROPDMGEXP)
+
+
+#all 48 events present from 1996. drop all previous data as incomplete.
+subsetData <- subset(subsetData, subsetData$BGN_DATE > as.Date("1995-12-31"))
+
+subsetData$EVTYPE <- toupper(subsetData$EVTYPE)
+
+length(unique(subsetData$EVTYPE)) #407 types wtf
