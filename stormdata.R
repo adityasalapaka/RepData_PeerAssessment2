@@ -35,8 +35,8 @@ exponent <- function (x){
 
 subsetData$PROPDMGEXP <- toupper(subsetData$PROPDMGEXP)
 subsetData$PROPDMGEXP <- exponent(subsetData$PROPDMGEXP)
-subsetData$PROPDMGEXPTOT <- as.numeric(subsetData$PROPDMG*data*subsetData$PROPDMGEXP)
+subsetData$PROPDMGEXPTOT <- as.numeric(subsetData$PROPDMG*subsetData$PROPDMGEXP)
 
 subsetData$CROPDMGEXP <- toupper(subsetData$CROPDMGEXP)
 subsetData$CROPDMGEXP <- exponent(subsetData$CROPDMGEXP)
-subsetData$CROPDMGEXPTOT <- as.numeric(subsetData$CROPDMG*data*subsetData$CROPDMGEXP)
+subsetData$CROPDMGEXPTOT <- as.numeric(subsetData$CROPDMG*subsetData$CROPDMGEXP)
