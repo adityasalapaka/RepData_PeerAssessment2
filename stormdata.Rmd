@@ -1,0 +1,189 @@
+---
+title: "Reproducible Research, Assignment 2"
+author: "Aditya Salapaka"
+output: html_document
+---
+
+## About This Assignment
+Storms and other severe weather events can cause both public health and economic
+problems for communities and municipalities. Many severe events can result in 
+fatalities, injuries, and property damage, and preventing such outcomes to the 
+extent possible is a key concern.
+
+This project involves exploring the U.S. National Oceanic and Atmospheric 
+Administration's (NOAA) storm database. This database tracks characteristics of 
+major storms and weather events in the United States, including when and where 
+they occur, as well as estimates of any fatalities, injuries, and property 
+damage.
+
+## About The Data
+
+[Storm Data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) [47Mb]
+
+National Weather Service [Storm Data Documentation] (https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf)
+
+National Climatic Data Center Storm Events [FAQ](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf)
+
+The events in the database start in the year 1950 and end in November 2011. In 
+the earlier years of the database there are generally fewer events recorded, 
+most likely due to a lack of good records. More recent years should be 
+considered more complete.
+
+## Title
+
+
+## Data Acquisition
+The data was downloaded from the link provided above.
+
+```{r cache = TRUE}
+download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", 
+              "stormdata.csv.bz2")
+
+data <- read.csv(bzfile("stormdata.csv.bz2")) # cache = TRUE
+```
+
+Since the questions that needed to be answered required only damage to property
+and crops, a subset of the relevant data was taken, and the original data-frame
+was removed from the memory.
+
+```{r}
+subsetData <- subset(data, select = c("BGN_DATE","EVTYPE","PROPDMG",
+                                            "PROPDMGEXP","CROPDMG","CROPDMGEXP",
+                                            "FATALITIES","INJURIES"))
+rm(data)
+```
+
+## Clean up
+Data before 1996 was incomplete, so data before this time was removed. Only 
+records past 1-1-1996 were considered.
+
+Initially, the date in the data frame had to be cleaned up. For this, the time
+was removed as it seemed unchanged, and therefore, irrelevant. 
+
+```{r}
+BGN_DATE <- subsetData$BGN_DATE
+BGN_DATE <- substr(BGN_DATE, 1, 9)
+subsetData$BGN_DATE <- as.Date(BGN_DATE, format = "%m/%d/%Y")
+
+subsetData <- subset(subsetData, subsetData$BGN_DATE > as.Date("1995-12-31"))
+
+```
+
+The `PROPDMGEXP` and `CROPDMGEXP` columns contained exponents for `PROPDMG` 
+and `CROPDMG`. These exponents were converted to their respective numbers and 
+multiplied with the data to arrive at final values to work with. These were
+stored in columns `PROPDMGEXPTOT` and `CROPDMGEXPTOT`.
+
+For this purpose, a function `exponent` was created.
+
+```{r}
+exponent <- function (x){
+        x <- as.character(x)
+        ifelse(x == "B", as.numeric(1000000000), 
+               ifelse(x == "M", as.numeric(1000000), 
+                      ifelse(x == "K", as.numeric(1000), 0)))
+}
+```
+
+subsetData$PROPDMGEXP <- toupper(subsetData$PROPDMGEXP)
+subsetData$PROPDMGEXP <- exponent(subsetData$PROPDMGEXP)
+subsetData$PROPDMGEXPTOT <- as.numeric(subsetData$PROPDMG*subsetData$PROPDMGEXP)
+
+subsetData$CROPDMGEXP <- toupper(subsetData$CROPDMGEXP)
+subsetData$CROPDMGEXP <- exponent(subsetData$CROPDMGEXP)
+subsetData$CROPDMGEXPTOT <- as.numeric(subsetData$CROPDMG*subsetData$CROPDMGEXP)
+
+The data documentation has defined 48 types of events which are:
+
+```
+Astronomical Low Tide
+Avalanche
+Blizzard
+Coastal Flood
+Cold/Windhill
+Debris Flow
+Dense Fog
+Dense Smoke
+Drought
+Dust Devil
+Dust Storm
+Excessive Heat
+Extremeold/Windhill
+Flash Flood
+Flood
+Frost/Freeze
+Funnelloud
+Freezing Fog
+Hail
+Heat
+Heavy Rain
+Heavy Snow
+High Surf
+High Wind
+Hurricane (Typhoon)
+Ice Storm
+Lake-Effect Snow
+Lakeshore Flood
+Lightning
+Marine Hail
+Marine High Wind
+Marine Strong Wind
+Marine Thunderstorm Wind
+Ripurrent
+Seiche
+Sleet
+Storm Surge/Tide
+Strong Wind
+Thunderstorm Wind
+Tornado
+Tropical Depression
+Tropical Storm
+Tsunami
+Volcanic Ash
+Waterspout
+Wildfire
+Winter Storm
+Winter Weather
+```
+
+The number of unique events were then found out.
+
+```{r}
+subsetData$EVTYPE <- toupper(subsetData$EVTYPE)
+
+unique <- length(unique(subsetData$EVTYPE))
+```
+
+This gives ```r unique``` number of events. This has to be reduced to 48.
+
+First, that part of the data was taken care of  where the `EVTYPE` is similar to
+the 48 events listed. To check how many events are left, a function was 
+created `similarevents`. It accepts FALSE or TRUE to give events which either 
+match the 48 events, or are different from them.
+
+```{r}
+similarevents <- function(x){
+        unique(grep("ASTRONOMICAL LOW TIDE|AVALANCHE|BLIZZARD|COASTAL FLOOD|
+        COLD/WINDHILL|DEBRIS FLOW|DENSE FOG|DENSE SMOKE|DROUGHT|DUST DEVIL|
+        DUST STORM|EXCESSIVE HEAT|EXTREMEOLD/WINDHILL|FLASH FLOOD|FLOOD|
+        FROST/FREEZE|FUNNELLOUD|FREEZING FOG|HAIL|HEAT|HEAVY RAIN|HEAVY SNOW|
+        HIGH SURF|HIGH WIND|HURRICANE (TYPHOON)|ICE STORM|LAKE-EFFECT SNOW|
+        LAKESHORE FLOOD|LIGHTNING|MARINE HAIL|MARINE HIGH WIND|
+        MARINE STRONG WIND|MARINE THUNDERSTORM WIND|RIPURRENT|SEICHE|SLEET|
+        STORM SURGE/TIDE|STRONG WIND|THUNDERSTORM WIND|TORNADO|
+        TROPICAL DEPRESSION|TROPICAL STORM|TSUNAMI|VOLCANIC ASH|WATERSPOUT|
+        WILDFIRE|WINTER STORM|WINTER WEATHER", subsetData$EVTYPE, 
+                    value = TRUE, invert = x))
+```
+
+A text file with all 48 events was created - `events.txt`.
+
+The events which were similar, but not same, as the 48 events were then found
+out. 
+
+```{r}
+events <- readLines("events.txt")
+events <- toupper(events)
+
+difference <- sort(str_trim(setdiff(similarevents(FALSE), events)))
+```

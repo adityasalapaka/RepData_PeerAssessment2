@@ -1,7 +1,8 @@
 download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2", 
               "stormdata.csv.bz2")
 
-data <- read.csv(bzfile("stormdata.csv.bz2")) # cache = TRUE
+# data <- read.csv(bzfile("stormdata.csv.bz2")) # cache = TRUE
+# subsetData <- read.csv("subsetdata.csv")
 
 # Subset relevant data
 
@@ -48,3 +49,41 @@ subsetData <- subset(subsetData, subsetData$BGN_DATE > as.Date("1995-12-31"))
 subsetData$EVTYPE <- toupper(subsetData$EVTYPE)
 
 length(unique(subsetData$EVTYPE)) #407 types wtf
+events <- read.table("events.txt", sep="\n", strip.white = TRUE, 
+                     col.names=c("EVTYPE"))
+
+events$EVTYPE <- toupper(events$EVTYPE)
+
+x <- readLines("events.txt")
+x <- toupper(x)
+
+similarevents <- function(x){
+        unique(grep("ASTRONOMICAL LOW TIDE|AVALANCHE|BLIZZARD|COASTAL FLOOD|
+        COLD/WINDHILL|DEBRIS FLOW|DENSE FOG|DENSE SMOKE|DROUGHT|DUST DEVIL|
+        DUST STORM|EXCESSIVE HEAT|EXTREMEOLD/WINDHILL|FLASH FLOOD|FLOOD|
+        FROST/FREEZE|FUNNELLOUD|FREEZING FOG|HAIL|HEAT|HEAVY RAIN|HEAVY SNOW|
+        HIGH SURF|HIGH WIND|HURRICANE (TYPHOON)|ICE STORM|LAKE-EFFECT SNOW|
+        LAKESHORE FLOOD|LIGHTNING|MARINE HAIL|MARINE HIGH WIND|
+        MARINE STRONG WIND|MARINE THUNDERSTORM WIND|RIPURRENT|SEICHE|SLEET|
+        STORM SURGE/TIDE|STRONG WIND|THUNDERSTORM WIND|TORNADO|
+        TROPICAL DEPRESSION|TROPICAL STORM|TSUNAMI|VOLCANIC ASH|WATERSPOUT|
+        WILDFIRE|WINTER STORM|WINTER WEATHER", subsetData$EVTYPE, 
+                    value = TRUE, invert = x))
+
+difference <- sort(str_trim(setdiff(fortyeight, x)))
+
+replace <- function(x){
+        for (i in 1:length(x)){
+                subsetData$EVTYPE[grepl(as.character(print(x[i])), subsetData$EVTYPE)] <- as.character(print(x[i]))
+        }
+}
+
+replace(x)
+
+for (i in 1:length(x)){
+        print(as.character(x[i]))
+}
+
+unique(grep("BLIZZARD", subsetData$EVTYPE, value = TRUE))
+
+#subsetData$EVTYPE[grepl("BLIZZARD", subsetData$EVTYPE)]<-"BLIZZARD"
