@@ -82,3 +82,7 @@ for (i in 1:length(x)){
 findevent <- function(x){
         unique(grep(x, subsetData$EVTYPE, value = TRUE))
 }
+
+others <- function(){
+        writeLines(as.character(sort(unique(subsetData$EVTYPE))), "others.txt")
+}

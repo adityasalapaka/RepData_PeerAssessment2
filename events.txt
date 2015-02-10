@@ -1,48 +1,48 @@
-Astronomical Low Tide
-Avalanche
-Blizzard
-Coastal Flood
-Cold/Windhill
-Debris Flow
-Dense Fog
-Dense Smoke
-Drought
-Dust Devil
-Dust Storm
-Excessive Heat
-Extremeold/Windhill
-Flash Flood
-Flood
-Frost/Freeze
-Funnelloud
-Freezing Fog
-Hail
-Heat
-Heavy Rain
-Heavy Snow
-High Surf
-High Wind
-Hurricane (Typhoon)
-Ice Storm
-Lake-Effect Snow
-Lakeshore Flood
-Lightning
-Marine Hail
-Marine High Wind
-Marine Strong Wind
-Marine Thunderstorm Wind
-Ripurrent
-Seiche
-Sleet
-Storm Surge/Tide
-Strong Wind
-Thunderstorm Wind
-Tornado
-Tropical Depression
-Tropical Storm
-Tsunami
-Volcanic Ash
-Waterspout
-Wildfire
-Winter Storm
-Winter Weather
+ASTRONOMICAL LOW TIDE
+AVALANCHE
+BLIZZARD
+COASTAL FLOOD
+COLD/WIND CHILL
+DEBRIS FLOW
+DENSE FOG
+DENSE SMOKE
+DROUGHT
+DUST DEVIL
+DUST STORM
+EXCESSIVE HEAT
+EXTREME COLD/WIND CHILL
+FLASH FLOOD
+FLOOD
+FROST/FREEZE
+FUNNELLOUD
+FREEZING FOG
+HAIL
+HEAT
+HEAVY RAIN
+HEAVY SNOW
+HIGH SURF
+HIGH WIND
+HURRICANE (TYPHOON)
+ICE STORM
+LAKE-EFFECT SNOW
+LAKESHORE FLOOD
+LIGHTNING
+MARINE HAIL
+MARINE HIGH WIND
+MARINE STRONG WIND
+MARINE THUNDERSTORM WIND
+RIPURRENT
+SEICHE
+SLEET
+STORM SURGE/TIDE
+STRONG WIND
+THUNDERSTORM WIND
+TORNADO
+TROPICAL DEPRESSION
+TROPICAL STORM
+TSUNAMI
+VOLCANIC ASH
+WATERSPOUT
+WILDFIRE
+WINTER STORM
+WINTER WEATHER

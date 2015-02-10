@@ -213,8 +213,8 @@ The other events were found out by `r similarevents(FALSE)`. Data cleanup was
 started in alphabetical order, starting from "ASTRONOMICAL LOW TIDE" and ending
 with "WINTER WEATHER".
 
-A function was created, `findevents`, which would find events with a particular
-term. For example, `findevents("TIDE")` would give all events with "tide" in
+A function was created, `findevent`, which would find events with a particular
+term. For example, `findevent("TIDE")` would give all events with "tide" in
 them.
 
 ```{r}
@@ -222,3 +222,42 @@ findevent <- function(x){
         unique(grep(x, subsetData$EVTYPE, value = TRUE))
 }
 ```
+
+Starting with tide...
+
+```{r}
+findevent("TIDE")
+```
+
+A blowout tide is apparently an abnormally low tide, according to [this](http://www.fossilguy.com/trips/mrylnd_dec2005/mrylnd_dec2005.htm).
+Astronimical high tide can be classified into storm surge/tide
+
+```{r}
+subsetData$EVTYPE[grepl("BLOW-OUT TIDE", subsetData$EVTYPE)] <- "ASTRONOMICAL LOW TIDE"
+subsetData$EVTYPE[grepl("ASTRONOMICAL HIGH TIDE", subsetData$EVTYPE)] <- "STORM SURGE/TIDE"
+```
+
+Replacing more
+```{r}
+subsetData$EVTYPE[grepl("COASTALSTORM|COASTAL STORM", subsetData$EVTYPE)] <- "COASTAL FLOOD"
+subsetData$EVTYPE[grepl("COASTALSTORM|COASTAL STORM", subsetData$EVTYPE)] <- "COASTAL FLOOD"
+subsetData$EVTYPE[grepl("COLD WIND CHILL TEMPERATURES|WIND CHILL", subsetData$EVTYPE)] <- "COLD/WIND CHILL"
+subsetData$EVTYPE[grepl("EXTREME WINDCHILL|EXTREME WINDCHILL TEMPERATURES|EXTREME WIND CHILL", subsetData$EVTYPE)] <- "EXTREME COLD/WIND CHILL"
+```
+
+As per the documentation:
+> The event name of Landslide was renamed to Debris Flow. 
+
+```{r}
+subsetData$EVTYPE[grepl("MUD|LANDSLIDE", subsetData$EVTYPE)] <- "DEBRIS FLOW"
+```
+
+Continuing sorting...
+```{r}
+subsetData$EVTYPE[grepl("FOG", subsetData$EVTYPE)] <- "DENSE FOG"
+subsetData$EVTYPE[grepl("SMOKE", subsetData$EVTYPE)] <- "DENSE SMOKE"
+subsetData$EVTYPE[grepl("ABNORMALLY DRY|DRIEST MONTH|DROUGHT|DRY", subsetData$EVTYPE)] <- "DROUGHT"
+subsetData$EVTYPE[grepl("SAHARAN DUST|BLOWING DUST", subsetData$EVTYPE)] <- "DUST STORM"
+subsetData$EVTYPE[grepl("DUST DEVEL", subsetData$EVTYPE)] <- "DUST DEVIL"
+subsetData$EVTYPE[grepl("FOG", subsetData$EVTYPE)] <- "DENSE FOG"
+subsetData$EVTYPE[grepl("ABNORMAL WARMTH|HOT WEATHER|HOT SPELL|HOT WEATHER|RECORD HIGH|RECORD WARM|UNSEASONABLY HOT|UNSEASONABLY WARM|UNUSUALLY WARM|UNUSUAL/RECORD WARMTH", subsetData$EVTYPE)] <- "EXCESSIVE HEAT"
