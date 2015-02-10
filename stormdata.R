@@ -49,10 +49,6 @@ subsetData <- subset(subsetData, subsetData$BGN_DATE > as.Date("1995-12-31"))
 subsetData$EVTYPE <- toupper(subsetData$EVTYPE)
 
 length(unique(subsetData$EVTYPE)) #407 types wtf
-events <- read.table("events.txt", sep="\n", strip.white = TRUE, 
-                     col.names=c("EVTYPE"))
-
-events$EVTYPE <- toupper(events$EVTYPE)
 
 x <- readLines("events.txt")
 x <- toupper(x)
@@ -69,21 +65,20 @@ similarevents <- function(x){
         TROPICAL DEPRESSION|TROPICAL STORM|TSUNAMI|VOLCANIC ASH|WATERSPOUT|
         WILDFIRE|WINTER STORM|WINTER WEATHER", subsetData$EVTYPE, 
                     value = TRUE, invert = x))
-
-difference <- sort(str_trim(setdiff(fortyeight, x)))
-
-replace <- function(x){
-        for (i in 1:length(x)){
-                subsetData$EVTYPE[grepl(as.character(print(x[i])), subsetData$EVTYPE)] <- as.character(print(x[i]))
-        }
 }
+
+difference <- sort(str_trim(setdiff(similarevents(FALSE), x)))
 
 replace(x)
 
 for (i in 1:length(x)){
-        print(as.character(x[i]))
+        subsetData$EVTYPE[grepl(x[i], subsetData$EVTYPE)] <- x[i]
 }
 
-unique(grep("BLIZZARD", subsetData$EVTYPE, value = TRUE))
+for (i in 1:length(x)){
+        print(unique(grep(x[i], subsetData$EVTYPE, value = TRUE)))
+}
 
-#subsetData$EVTYPE[grepl("BLIZZARD", subsetData$EVTYPE)]<-"BLIZZARD"
+findevent <- function(x){
+        unique(grep(x, subsetData$EVTYPE, value = TRUE))
+}

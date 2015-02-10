@@ -154,7 +154,7 @@ subsetData$EVTYPE <- toupper(subsetData$EVTYPE)
 unique <- length(unique(subsetData$EVTYPE))
 ```
 
-This gives ```r unique``` number of events. This has to be reduced to 48.
+This gives `r unique` number of events. This has to be reduced to 48.
 
 First, that part of the data was taken care of  where the `EVTYPE` is similar to
 the 48 events listed. To check how many events are left, a function was 
@@ -174,9 +174,10 @@ similarevents <- function(x){
         TROPICAL DEPRESSION|TROPICAL STORM|TSUNAMI|VOLCANIC ASH|WATERSPOUT|
         WILDFIRE|WINTER STORM|WINTER WEATHER", subsetData$EVTYPE, 
                     value = TRUE, invert = x))
+        }
 ```
 
-A text file with all 48 events was created - `events.txt`.
+A text file with all 48 events was created, which is `events.txt`.
 
 The events which were similar, but not same, as the 48 events were then found
 out. 
@@ -185,5 +186,39 @@ out.
 events <- readLines("events.txt")
 events <- toupper(events)
 
-difference <- sort(str_trim(setdiff(similarevents(FALSE), events)))
+print(sort(str_trim(setdiff(similarevents(FALSE), events))))
+```
+
+These were then replaced by the event names they correspond to.
+
+```{r}
+for (i in 1:length(x)){
+        subsetData$EVTYPE[grepl(x[i], subsetData$EVTYPE)] <- x[i]
+}
+```
+
+All these events have been reduced to their standard types.
+```{r}
+print(sort(str_trim(setdiff(similarevents(FALSE), events))))
+```
+
+```{r}
+unique <- length(unique(subsetData$EVTYPE))
+```
+
+There are now `r unique` number of events remaining. We have to tackle the other
+events which are not similar to the 48 events.
+
+The other events were found out by `r similarevents(FALSE)`. Data cleanup was
+started in alphabetical order, starting from "ASTRONOMICAL LOW TIDE" and ending
+with "WINTER WEATHER".
+
+A function was created, `findevents`, which would find events with a particular
+term. For example, `findevents("TIDE")` would give all events with "tide" in
+them.
+
+```{r}
+findevent <- function(x){
+        unique(grep(x, subsetData$EVTYPE, value = TRUE))
+}
 ```
