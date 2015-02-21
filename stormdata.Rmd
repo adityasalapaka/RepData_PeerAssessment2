@@ -164,8 +164,8 @@ match the 48 events, or are different from them.
 ```{r}
 similarevents <- function(x){
         unique(grep("ASTRONOMICAL LOW TIDE|AVALANCHE|BLIZZARD|COASTAL FLOOD|
-        COLD/WINDHILL|DEBRIS FLOW|DENSE FOG|DENSE SMOKE|DROUGHT|DUST DEVIL|
-        DUST STORM|EXCESSIVE HEAT|EXTREMEOLD/WINDHILL|FLASH FLOOD|FLOOD|
+        COLD/WIND CHILL|DEBRIS FLOW|DENSE FOG|DENSE SMOKE|DROUGHT|DUST DEVIL|
+        DUST STORM|EXCESSIVE HEAT|EXTREME COLD/WIND CHILL|FLASH FLOOD|FLOOD|
         FROST/FREEZE|FUNNELLOUD|FREEZING FOG|HAIL|HEAT|HEAVY RAIN|HEAVY SNOW|
         HIGH SURF|HIGH WIND|HURRICANE (TYPHOON)|ICE STORM|LAKE-EFFECT SNOW|
         LAKESHORE FLOOD|LIGHTNING|MARINE HAIL|MARINE HIGH WIND|
@@ -192,8 +192,8 @@ print(sort(str_trim(setdiff(similarevents(FALSE), events))))
 These were then replaced by the event names they correspond to.
 
 ```{r}
-for (i in 1:length(x)){
-        subsetData$EVTYPE[grepl(x[i], subsetData$EVTYPE)] <- x[i]
+for (i in 1:length(events)){
+        subsetData$EVTYPE[grepl(events[i], subsetData$EVTYPE)] <- events[i]
 }
 ```
 
@@ -249,7 +249,7 @@ As per the documentation:
 > The event name of Landslide was renamed to Debris Flow. 
 
 ```{r}
-subsetData$EVTYPE[grepl("MUD|LANDSLIDE", subsetData$EVTYPE)] <- "DEBRIS FLOW"
+subsetData$EVTYPE[grepl("LANDSLIDE", subsetData$EVTYPE)] <- "DEBRIS FLOW"
 ```
 
 Continuing sorting...
@@ -261,3 +261,7 @@ subsetData$EVTYPE[grepl("SAHARAN DUST|BLOWING DUST", subsetData$EVTYPE)] <- "DUS
 subsetData$EVTYPE[grepl("DUST DEVEL", subsetData$EVTYPE)] <- "DUST DEVIL"
 subsetData$EVTYPE[grepl("FOG", subsetData$EVTYPE)] <- "DENSE FOG"
 subsetData$EVTYPE[grepl("ABNORMAL WARMTH|HOT WEATHER|HOT SPELL|HOT WEATHER|RECORD HIGH|RECORD WARM|UNSEASONABLY HOT|UNSEASONABLY WARM|UNUSUALLY WARM|UNUSUAL/RECORD WARMTH", subsetData$EVTYPE)] <- "EXCESSIVE HEAT"
+subsetData$EVTYPE[grepl("FREEZE", subsetData$EVTYPE)] <- ""
+
+```
+
